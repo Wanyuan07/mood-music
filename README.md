@@ -20,7 +20,7 @@ Mood Music is a web application that recommends music based on the user’s mood
 ## Setup
 1. Get a Spotify access token
 2. Replace `YOUR_TOKEN` in `home.js`
-3. Open `index.html`
+3. Open `home.html`
 
 ## Status
 Under Development
