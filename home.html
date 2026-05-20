@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOOD MUSIC APP</title>
+    <link rel="stylesheet" href="./home.css">
+  </head>
+
+  
+  <body>
+
+    <header>
+      <nav class="nav-bar">
+        <a class="pages" href="./home.html" >Home</a>
+        <a class="pages" href="./playlist.html">Playlist</a>
+        <a class="pages" href="./personalization.html">Personalization</a>
+        <div class="searchbar">
+          <input type="text" placeholder="Search" id="searchbox">
+          <button id="searchbtn">🔎</button>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <section>
+        <h1 id="title">MOOD MUSIC SELECTOR</h1>
+        <p id="des">Welcome to the Mood Music Selector! This app helps you find the perfect music for your current mood.</p>  
+      </section>
+
+      <section>
+        <div id="buttons">
+          <button class="btn">Happy 😊</button>
+          <button class="btn">Sad 😢</button>
+          <button class="btn">Chill 😎</button>
+          <button class="btn">Focus ✒️</button>
+          <button class="btn">Party 🥳</button>
+          <button class="btn">Sleepy 😴</button>
+        </div>
+        <p id="initial_msg">Select your mood to get a music recommendation!</p>
+      </section>
+
+      <section id="container"></section>
+    </main>
+
+    <script src="./home.js"></script>
+
+  </body>
+</html>
