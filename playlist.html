@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width initial-scale=1.0">
+        <title>Playlists - MOOD MUSIC</title>
+        <link rel="stylesheet" href="./playlist.css">
+    </head>
+    
+    <body>
+
+        <header>
+            <nav class="nav-bar">
+                <button id="theme"><img class="theme-img" src="./images/day.png" height="30" width="30"></button>
+                <a class="pages" href="./home.html" >Home</a>
+                <a class="pages" href="./playlist.html">Playlist</a>
+                <a class="pages" href="./personalization.html">Personalization</a>
+                <div class="searchbar">
+                    <input type="text" placeholder="Search" id="searchbox">
+                    <button id="searchbtn">🔎</button>
+                </div>
+            </nav>
+        </header>
+        
+        <section>
+            <h1>Your Own Playlists</h1>
+            <p class="ini_msg"></p>
+        </section>
+        <section id="part">
+            <div id="favpage">
+                <p class="msg"></p>
+                <div id="container"></div>
+            </div>
+        </section>
+        
+        <script src="./playlist.js"></script>
+    </body>
+</html>
