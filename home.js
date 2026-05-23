@@ -103,7 +103,8 @@ function card(mood, data) {
         contain.appendChild(song_card);
         song_card.querySelector(".fav").addEventListener("click", function() {
             if (song_card.querySelector(".fav-img").src.includes("unfav")) {
-                song_card.querySelector(".fav-img").src = "./images/fav.jpg";               
+                song_card.querySelector(".fav-img").src = "./images/fav.jpg";    
+                favorites = JSON.parse(localStorage.getItem("savedMusic")) || [];           
                 favorites.push(music);
                 localStorage.setItem("savedMusic", JSON.stringify(favorites));
                 console.log(favorites);
@@ -112,6 +113,7 @@ function card(mood, data) {
                 song_card.querySelector(".fav-img").src = "./images/unfav.jpg";
                 favorites = favorites.filter(song => song.link != music.link);
                 localStorage.setItem("savedMusic", JSON.stringify(favorites));
+                favorites = JSON.parse(localStorage.getItem("savedMusic")) || [];
                 console.log(favorites);
             }
         })
