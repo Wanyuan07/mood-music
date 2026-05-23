@@ -31,7 +31,6 @@ button_Search.addEventListener("click", function() {
 })  
 
 
-
 function song(mood) {
     let obj = mood.toLowerCase();
     let playlistId = playlists[obj];
@@ -39,9 +38,11 @@ function song(mood) {
         msg.innerHTML = "Mood not available....."
         return;
     }
+    localStorage.setItem("mood", `${mood}`);
+    document.getElementById("des").innerHTML = "Welcome to the Mood Music Selector!"
     msg.innerHTML = "Loading...........";
     contain.innerHTML = "";
-    const token = "YOUR_TOKEN"
+    let token = "YOUR_TOKEN"
     let promise = fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks?limit=50`, {
         headers: {
             Authorization: `Bearer ${token}`
@@ -69,7 +70,7 @@ function error(mood) {
         song(mood);
     }
 }
-
+let favorites = JSON.parse(localStorage.getItem("savedMusic")) || [];
 function card(mood, data) {
     msg.innerHTML = `Top recommendations for ${mood}:<br>`;
     const num = Math.round(Math.random() * 40); 
@@ -84,8 +85,65 @@ function card(mood, data) {
             image = track.album.images[0].url;
         }
         let artist = track.artists[0].name;
-        song_card.innerHTML += `<br><img src="${image}" width="300">`;
-        song_card.innerHTML += `<br><a href="${songlink}" target="_blank">${songname}</a><br>${artist}<br>`;
+        let music = {
+            name : `${songname}`,
+            artist : `${artist}`,
+            img : `${image}`,
+            link : `${songlink}`,
+        }
+        song_card.innerHTML += `<br><img class="album" src="${image}" width="300">`;
+        song_card.innerHTML += `<br><a href="${songlink}" target="_blank">${songname}</a><br>${artist}`;
+        if (favorites.some(song => song.link == music.link)) {
+            song_card.innerHTML += `<button class="fav"><img class="fav-img" src="./images/fav.jpg"></button>`;
+        }
+        else {
+            song_card.innerHTML += `<button class="fav"><img class="fav-img" src="./images/unfav.jpg"></button>`;
+        }
+        
         contain.appendChild(song_card);
+        song_card.querySelector(".fav").addEventListener("click", function() {
+            if (song_card.querySelector(".fav-img").src.includes("unfav")) {
+                song_card.querySelector(".fav-img").src = "./images/fav.jpg";               
+                favorites.push(music);
+                localStorage.setItem("savedMusic", JSON.stringify(favorites));
+                console.log(favorites);
+            }
+            else {
+                song_card.querySelector(".fav-img").src = "./images/unfav.jpg";
+                favorites = favorites.filter(song => song.link != music.link);
+                localStorage.setItem("savedMusic", JSON.stringify(favorites));
+                console.log(favorites);
+            }
+        })
     }
 }
+   
+
+
+if (localStorage.getItem("mood")) {
+    document.getElementById("des").innerHTML = `Welcome Back. Ready for some ${localStorage.getItem("mood")} vibes again...... `;
+}
+else {
+    document.getElementById("des").innerHTML = "Welcome to the Mood Music Selector! This app helps you find the perfect music for your current mood.";
+}
+
+let darkTheme = true;
+document.getElementById("theme").addEventListener("click", function() {
+    if (darkTheme) {
+        document.querySelector(".theme-img").src = "./images/night.png";
+        document.body.style.backgroundColor = "#c9a5f8";
+        document.querySelector(".nav-bar").style.backgroundColor = "rgb(198, 223, 247)";
+        darkTheme = false;
+    }
+    else {
+        document.querySelector(".theme-img").src = "./images/day.png";
+        document.body.style.backgroundColor = "#100123";
+        document.querySelector(".nav-bar").style.backgroundColor = "rgb(106, 133, 160)";
+        darkTheme = true;
+    }
+})
+console.log(favorites);
+
+
+
+
