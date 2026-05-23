@@ -1,5 +1,5 @@
 let storage = localStorage.getItem("savedMusic");
-let music = JSON.parse(storage);
+let music = JSON.parse(storage); 
 if (!music || music.length == 0) {
     document.querySelector(".ini_msg").innerHTML = "Save songs to view this page...";
 }
