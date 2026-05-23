@@ -22,7 +22,6 @@ for (let i = 0; i<music.length; i++) {
     document.getElementById("container").appendChild(songCard);
     songCard.querySelector(".fav-btn").addEventListener("click", function() {
         music = music.filter(song => song.link != link);
-
         localStorage.setItem("savedMusic", JSON.stringify(music));
         songCard.remove();
     })
