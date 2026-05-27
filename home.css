@@ -79,7 +79,7 @@ body {
 
 .song-info {
   position: relative;
-  height: 400px;
+  height: 420px;
   width: 350px;
   background-color: rgb(232, 225, 225);
   text-align: center;
@@ -129,19 +129,37 @@ body {
 .nav-bar {
   display: flex;
   justify-content: flex-start;
-  justify-content: space-around;
+  align-items: center;
   background-color: rgb(106, 133, 160);
   font-size: 20px;
   height: 50px;
+  padding-left: 70px;
+  gap: 90px;
+}
+.pages {
+  gap: 20px;
+  padding-left: 20px;
+}
+.searchbar {
+  display: flex;
   align-items: center;
-  padding-left: 50px;
-  justify-items: flex-start;
+  background-color: rgb(133, 154, 172);
+  border-radius: 30px;
+  width: 220px; 
+  height: 30px;
+  margin-left: 650px;
+  padding-left: 10px;
 }
 #searchbox {
-  border-radius: 10px;
+  background-color: rgb(133, 154, 172);
+  border-radius: 30px;
+  border: none;
 }
 #searchbtn {
-  border-radius: 10px;
+  height: 30px;
+  width: 90px;
+  border-radius: 100px;
+  border: none;
 }
 
 /* ------------------------------------------------------------------------- */
