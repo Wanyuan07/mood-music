@@ -6,12 +6,22 @@ const playlists = {
     "party": "1SX3oHTD0iRZM4c7TXZKL9",  
     "sleepy": "0Uqdp1V2ytdrfIoAGQYslS"
 }
+const moodWords = {
+    "happy": ["happy", "joyful", "cheerful", "delighted", "overjoyed", "pleased", "satisfied", "thrilled"],
+    "sad": ["sad", "unhappy", "depressed", "down", "heartbroken", "mournful", "disheartened"],
+    "chill": ["chill", "relaxed", "calm", "laid-back", "peaceful", "cool"],
+    "focus": ["focus", "concentrate", "productive", "motivated", "determined"],
+    "party": ["party", "celebrate", "festive", "lively", "energetic", "gymming"],
+    "sleepy": ["sleepy", "tired", "drowsy", "exhausted", "lethargic", "fatigued"]
+}
 let msg = document.getElementById("initial_msg");
 let contain = document.getElementById("container");
 let button = document.getElementsByClassName("btn");
 let button_Search = document.getElementById("searchbtn");
 let input = document.getElementById("searchbox");
 let key = document.getElementById("keyboard")
+
+// ----------------------------------------------------
 
 input.addEventListener("keydown", function(event) {
     if(event.key === "Enter") {
@@ -22,7 +32,7 @@ input.addEventListener("keydown", function(event) {
 for (let i = 0; i<button.length; i++)  {
     button[i].addEventListener("click", function() {
         let mood = this.innerText.split(" ")[0];
-        song(mood);
+        error(mood);
     });
 }
 button_Search.addEventListener("click", function() {
@@ -30,19 +40,35 @@ button_Search.addEventListener("click", function() {
     error(mood); 
 })  
 
+// ----------------------------------------------------
 
-function song(mood) {
-    let obj = mood.toLowerCase();
-    let playlistId = playlists[obj];
-    if (!playlistId) {
-        msg.innerHTML = "Mood not available....."
+function error(mood) {
+    contain.style.display = "none";
+    if (!mood || mood == " ") {
+        msg.innerHTML = "Please enter a valid input.....";
         return;
     }
+    mood = mood.toLowerCase().split(" ");
+    let new_mood = Object.keys(moodWords).find(key => mood.some(word => moodWords[key].includes(word)));
+    if (new_mood == undefined) {
+        msg.innerHTML = "Mood not available. Please try another one.....";
+        return;
+    }
+    else {
+        song(new_mood);
+    }
+}
+
+// ----------------------------------------------------
+
+function song(mood) {
+    contain.style.display = "grid";
+    let playlistId = playlists[mood];
     localStorage.setItem("mood", `${mood}`);
     document.getElementById("des").innerHTML = "Welcome to the Mood Music Selector!"
     msg.innerHTML = "Loading...........";
     contain.innerHTML = "";
-    let token = "YOUR_TOKEN"
+    let token = "YOUR_TOKEN";
     let promise = fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks?limit=50`, {
         headers: {
             Authorization: `Bearer ${token}`
@@ -61,15 +87,8 @@ function song(mood) {
     })
 }
 
-function error(mood) {
-    if (mood == " " || mood == "") {
-        msg.innerHTML = "Please enter a valid input....";
-        return;
-    }
-    else {
-        song(mood);
-    }
-}
+// ----------------------------------------------------
+
 let favorites = JSON.parse(localStorage.getItem("savedMusic")) || [];
 function card(mood, data) {
     msg.innerHTML = `Top recommendations for ${mood}:<br>`;
@@ -91,36 +110,41 @@ function card(mood, data) {
             img : `${image}`,
             link : `${songlink}`,
         }
-        song_card.innerHTML += `<br><img class="album" src="${image}" width="300">`;
-        song_card.innerHTML += `<br><a href="${songlink}" target="_blank">${songname}</a><br>${artist}`;
+        song_card.innerHTML  += `<br><img class="album" src="${image}" width="300">
+                                <br><a href="./songs.html" class="song_link">${songname}</a><br>${artist}`;
+        favorites = JSON.parse(localStorage.getItem("savedMusic")) || [];
         if (favorites.some(song => song.link == music.link)) {
             song_card.innerHTML += `<button class="fav"><img class="fav-img" src="./images/fav.jpg"></button>`;
         }
         else {
             song_card.innerHTML += `<button class="fav"><img class="fav-img" src="./images/unfav.jpg"></button>`;
         }
-        
         contain.appendChild(song_card);
+        //------------------------------------------------
         song_card.querySelector(".fav").addEventListener("click", function() {
             if (song_card.querySelector(".fav-img").src.includes("unfav")) {
                 song_card.querySelector(".fav-img").src = "./images/fav.jpg";    
                 favorites = JSON.parse(localStorage.getItem("savedMusic")) || [];           
                 favorites.push(music);
                 localStorage.setItem("savedMusic", JSON.stringify(favorites));
-                console.log(favorites);
             }
             else {
                 song_card.querySelector(".fav-img").src = "./images/unfav.jpg";
                 favorites = favorites.filter(song => song.link != music.link);
                 localStorage.setItem("savedMusic", JSON.stringify(favorites));
                 favorites = JSON.parse(localStorage.getItem("savedMusic")) || [];
-                console.log(favorites);
             }
         })
+        //------------------------------------------------
+        song_card.querySelector(".song_link").addEventListener("click", function() {
+            localStorage.setItem("playMusic", JSON.stringify(music));
+            localStorage.setItem("last_page", "./home.html");
+        })
+        //------------------------------------------------
     }
 }
    
-
+// ----------------------------------------------------
 
 if (localStorage.getItem("mood")) {
     document.getElementById("des").innerHTML = `Welcome Back. Ready for some ${localStorage.getItem("mood")} vibes again...... `;
@@ -129,23 +153,31 @@ else {
     document.getElementById("des").innerHTML = "Welcome to the Mood Music Selector! This app helps you find the perfect music for your current mood.";
 }
 
-let darkTheme = true;
+// ----------------------------------------------------
+
+let nav_bar = document.querySelector(".nav-bar");
+let theme_img = document.querySelector(".theme-img");
+let darkTheme = JSON.parse(localStorage.getItem("theme"));
+if (!darkTheme) {
+    theme_img.src = "./images/night.png";
+    document.body.style.backgroundColor = "#c9a5f8";
+    nav_bar.style.backgroundColor = "rgb(198, 223, 247)";
+}
 document.getElementById("theme").addEventListener("click", function() {
     if (darkTheme) {
-        document.querySelector(".theme-img").src = "./images/night.png";
+        theme_img.src = "./images/night.png";
         document.body.style.backgroundColor = "#c9a5f8";
-        document.querySelector(".nav-bar").style.backgroundColor = "rgb(198, 223, 247)";
+        nav_bar.style.backgroundColor = "rgb(198, 223, 247)";
         darkTheme = false;
     }
     else {
-        document.querySelector(".theme-img").src = "./images/day.png";
+        theme_img.src = "./images/day.png";
         document.body.style.backgroundColor = "#100123";
-        document.querySelector(".nav-bar").style.backgroundColor = "rgb(106, 133, 160)";
+        nav_bar.style.backgroundColor = "rgb(106, 133, 160)";
         darkTheme = true;
     }
+    localStorage.setItem("theme", JSON.stringify(darkTheme));
 })
 console.log(favorites);
 
-
-
-
+// ----------------------------------------------------
