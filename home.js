@@ -62,7 +62,7 @@ function error(mood) {
 // ----------------------------------------------------
 
 pastMood = localStorage.getItem("lastMood");
-if (pastMood.length > 0) {
+if (pastMood && pastMood.length > 0) {
     song(pastMood);
 }
 
