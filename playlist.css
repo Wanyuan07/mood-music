@@ -3,7 +3,12 @@ body {
   color:white;
   text-align: center;
 }
-.ini_msg {
+#heading {
+  font-size: 60px;
+  margin-top: 80px;
+}
+#ini_msg {
+  display: none;
   margin-top: 200px;
   font-size: 50px;
 }
@@ -15,18 +20,18 @@ body {
   justify-content: center;
 }
 .msg {
-  font-size: 60px;
+  font-size: 50px;
   background-color: rgba(153, 176, 236, 0.681);
   border-radius: 10px;
 }
 #favpage {
+  margin-top: 50px;
   background: linear-gradient(
     to bottom,
     #04021f,
     #4d4d8f,
     rgb(112, 146, 181)
   );
-  width: 1000px;
   padding-bottom: 100px;
   padding-top: 25px;
   border-radius: 100px;
@@ -37,21 +42,21 @@ body {
   grid-template-columns: repeat(2, 1fr);
   align-items: center;
   gap: 50px;
+  padding-left: 50px;
+  padding-right: 50px;
 }
 .card {
   position: relative;
-  height: 425px;
-  width: 350px;
+  height: 450px;
+  width: 300px;
   background-color: #AC9FBB;
   border-radius: 20px;
   font-size: 25px;
-  margin-left: 100px;
   box-shadow: 10px 10px 7px rgba(0, 0, 0, 0.25);
-
 }
 .img {
   height: 300px;
-  width: 225px;
+  width: 250px;
   border-radius: 20px;
   border: 1px solid black;
 }
@@ -75,7 +80,7 @@ body {
 .fav-btn {
   position: absolute;
   right: 30px;
-  bottom: 25px;
+  bottom: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -95,19 +100,37 @@ body {
 .nav-bar {
   display: flex;
   justify-content: flex-start;
-  justify-content: space-around;
+  align-items: center;
+  gap: 90px;
   background-color: rgb(106, 133, 160);
   font-size: 20px;
   height: 50px;
+  padding-left: 70px;
+}
+.pages {
+  gap: 20px;
+  padding-left: 20px;
+}
+.searchbar {
+  display: flex;
   align-items: center;
-  padding-left: 50px;
-  justify-items: flex-start;
+  background-color: rgb(133, 154, 172);
+  border-radius: 30px;
+  width: 220px; 
+  height: 30px;
+  margin-left: 650px;
+  padding-left: 10px;
 }
 #searchbox {
-  border-radius: 10px;
+  background-color: rgb(133, 154, 172);
+  border-radius: 30px;
+  border: none;
 }
 #searchbtn {
-  border-radius: 10px;
+  height: 30px;
+  width: 90px;
+  border-radius: 100px;
+  border: none;
 }
 
 /* -------------------------------------------------------------- */
@@ -126,3 +149,22 @@ body {
 }
 
 /* -------------------------------------------------------------- */
+
+@media screen and (max-width: 600px) {
+  .nav-bar{flex-direction: column;
+            height: 150px;
+            align-items: flex-start;
+            font-size: 17px;
+            padding-left: 20px;
+            padding-bottom: 5px;}
+  #heading {font-size: 40px;
+            margin-top: 50px;}          
+  .msg {font-size: 30px;}
+  #favpage {width: 90%;
+            border-radius: 70px;}                
+  #container { grid-template-columns: repeat(1, 1fr);}          
+  .card {height: 400px;
+         width: 300px;
+         font-size: 20px;}  
+  .fav-btn {bottom: 15px;}  
+}
