@@ -62,7 +62,7 @@ function error(mood) {
 // ----------------------------------------------------
 
 pastMood = localStorage.getItem("lastMood");
-if (pastMood && pastMood.length > 0) {
+if (pastMood &&pastMood.length > 0) {
     song(pastMood);
 }
 
@@ -101,11 +101,17 @@ let favorites = JSON.parse(localStorage.getItem("savedMusic")) || [];
 function card(mood, data) {
     msg.innerHTML = `Top recommendations for ${mood}:<br>`;
     const num = localStorage.getItem("index") || Math.round(Math.random() * 40); 
-    for (let i = num; i < num + 8; i++) {
+    let i = num, cardNum = 0;
+    while ( i < num + 10 || cardNum < 8) {
         let song_card = document.createElement("div");
         song_card.className = "song-info";
         let track = data.items[i].track;
+        console.log(track);
         let songname = track.name;
+        if (songname.length == 0) {
+            i++;
+            continue;
+        }
         let songlink = track.external_urls.spotify;
         let image = "";
         if (track.album.images.length > 0) {
@@ -129,6 +135,8 @@ function card(mood, data) {
         }
         localStorage.setItem("lastMood", "");
         localStorage.setItem("index", "");
+        i++;
+        cardNum++;
         contain.appendChild(song_card);
         //------------------------------------------------
         song_card.querySelector(".fav").addEventListener("click", function() {
@@ -190,6 +198,5 @@ document.getElementById("theme").addEventListener("click", function() {
     }
     localStorage.setItem("theme", JSON.stringify(darkTheme));
 })
-console.log(favorites);
 
 // ----------------------------------------------------
