@@ -1,5 +1,3 @@
-
-
 let storage = localStorage.getItem("savedMusic");
 let music = JSON.parse(storage);
 if (!music || music.length == 0) {
@@ -13,21 +11,21 @@ else {
 
 
 function fav(song) {
-    let music = {
+    let songData = {
         name:  `${song.name}`,
         img : `${song.img}`,
         artist : `${song.artist}`,
         link : `${song.link}`
     } 
-    songCard = document.createElement("div");
+    let songCard = document.createElement("div");
     songCard.className = "card";
-    songCard.innerHTML += `<br><img class="img" src="${music.img}"><br> 
-                           <a href="./songs.html" class="song-link">${music.name}</a><br>${music.artist}
+    songCard.innerHTML += `<br><img class="img" src="${songData.img}"><br> 
+                           <a href="./songs.html" class="song-link">${songData.name}</a><br>${songData.artist}
                            <button class="fav-btn"><img class="fav-img" src="./images/fav.jpg"></button>`
     document.getElementById("container").appendChild(songCard);
     //------------------------------------------------
     songCard.querySelector(".fav-btn").addEventListener("click", function() {
-        music = music.filter(song => song.link != link);
+        music = music.filter(song => song.link != songData.link);
         localStorage.setItem("savedMusic", JSON.stringify(music));
         songCard.remove();
         if (music.length == 0) {
@@ -37,7 +35,7 @@ function fav(song) {
     })
     //------------------------------------------------
     songCard.querySelector(".song-link").addEventListener("click", function() {
-        localStorage.setItem("playMusic", JSON.stringify(music));
+        localStorage.setItem("playMusic", JSON.stringify(songData));
         localStorage.setItem("last_page", "./playlist.html");
     })
 }
