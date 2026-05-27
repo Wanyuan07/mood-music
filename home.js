@@ -61,6 +61,13 @@ function error(mood) {
 
 // ----------------------------------------------------
 
+pastMood = localStorage.getItem("lastMood");
+if (pastMood.length > 0) {
+    song(pastMood);
+}
+
+// ----------------------------------------------------
+
 function song(mood) {
     contain.style.display = "grid";
     let playlistId = playlists[mood];
@@ -68,7 +75,7 @@ function song(mood) {
     document.getElementById("des").innerHTML = "Welcome to the Mood Music Selector!"
     msg.innerHTML = "Loading...........";
     contain.innerHTML = "";
-    let token = "YOUR_TOKEN";
+    let token = "BQDAujF5cU034gSX9FOjIPwuI99-NkguWR3J2KXKRXRg6ZXWZoJ4ORVaeGBnrcIRy2hbvVUb5Lc3tWErBBAVi7c3V0MAFhB-oDXHNkrAwb3Dg8ujWIlPNVWX6GduRQjReF9i6xW3dfY-_syvCKFS_NrfpR4FpzePdVuQNxYT1vOaL9hDZXn0nyTydH4RlqO1AVLcmOHLRADH3LWVie3qTOJTm0GtpA0svw--f1RPCEQTfnCkMkYcsRk-aiJZ6giM_S7QeRj_qBv6ouLk39fj-MOXFJz45OFJ1wiYsB8nhbfOW9zVk9DqpOU573tLR2_vlmJMn3Xmr8YEvsWYzy5tCTjhKWmncpmMfadReGi2FBBv9wWXHc3fwPtxf74x9pxlkMLxMIRl_Ub8SZy8l_pnw027AZLQm8go";
     let promise = fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks?limit=50`, {
         headers: {
             Authorization: `Bearer ${token}`
@@ -83,6 +90,7 @@ function song(mood) {
             msg.innerHTML = "Token expired....";
             return;
         }
+        if (localStorage.getItem)
         card(mood, data);
     })
 }
@@ -92,7 +100,7 @@ function song(mood) {
 let favorites = JSON.parse(localStorage.getItem("savedMusic")) || [];
 function card(mood, data) {
     msg.innerHTML = `Top recommendations for ${mood}:<br>`;
-    const num = Math.round(Math.random() * 40); 
+    const num = localStorage.getItem("index") || Math.round(Math.random() * 40); 
     for (let i = num; i < num + 8; i++) {
         let song_card = document.createElement("div");
         song_card.className = "song-info";
@@ -119,6 +127,8 @@ function card(mood, data) {
         else {
             song_card.innerHTML += `<button class="fav"><img class="fav-img" src="./images/unfav.jpg"></button>`;
         }
+        localStorage.setItem("lastMood", "");
+        localStorage.setItem("index", "");
         contain.appendChild(song_card);
         //------------------------------------------------
         song_card.querySelector(".fav").addEventListener("click", function() {
@@ -138,7 +148,9 @@ function card(mood, data) {
         //------------------------------------------------
         song_card.querySelector(".song_link").addEventListener("click", function() {
             localStorage.setItem("playMusic", JSON.stringify(music));
-            localStorage.setItem("last_page", "./home.html");
+            localStorage.setItem("last_page", "./home.html")
+            localStorage.setItem("lastMood", `${mood}`);
+            localStorage.setItem("index", `${num}`);
         })
         //------------------------------------------------
     }
