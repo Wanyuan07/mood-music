@@ -1,9 +1,5 @@
 let storage = localStorage.getItem("savedMusic");
 let music = JSON.parse(storage);
-console.log(music);
-console.log(typeof(music));
-console.log(music.length);
-
 if (!music || music.length == 0) {
     document.getElementById("ini_msg").style.display = "block";
     document.getElementById("part").style.display = "none";
@@ -91,7 +87,6 @@ input.addEventListener("keydown", function(event) {
 function value(search) {
     search = search.split(" ");
     let key_word = music.filter(song => search.some(word => song.name.toLowerCase().split(" ").includes(word)));
-    console.log(key_word);
     if (key_word.length > 0) {
         input.value = "";
         document.querySelector(".msg").innerHTML = `<button class="back-btn">
