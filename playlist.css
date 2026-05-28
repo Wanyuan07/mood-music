@@ -15,12 +15,33 @@ body {
 
 /* -------------------------------------------------------------- */
 
+.back-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 100px;
+  height: 40px;
+  width: 40px;
+}
+.back-img {
+  height: 30px;
+  width: 30px;
+  border-radius: 100px;
+}
+
+/* -------------------------------------------------------------- */
+
 #part{
   display: flex;
   justify-content: center;
 }
 .msg {
-  font-size: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 60px;
+  font-size: 60px;
   background-color: rgba(153, 176, 236, 0.681);
   border-radius: 10px;
 }
