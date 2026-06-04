@@ -1,5 +1,6 @@
 let storage = localStorage.getItem("savedMusic");
 let music = JSON.parse(storage);
+
 if (!music || music.length == 0) {
     document.getElementById("ini_msg").style.display = "block";
     document.getElementById("part").style.display = "none";
@@ -73,11 +74,29 @@ let input = document.getElementById("searchbox");
 let btn =  document.getElementById("searchbtn");
 btn.addEventListener("click", function() {
     let search = input.value.toLowerCase();
+    if (search.length == 0 || search == " ") {
+        document.getElementById("ini_msg").style.display = "block";
+        document.getElementById("part").style.display = "none";
+        document.getElementById("ini_msg").innerHTML = "Invalid search....";
+        setTimeout(() => {
+            window.location.href = "./playlist.html"
+            }, 1000)
+        return;    
+    }
     value(search);
 })
 input.addEventListener("keydown", function(event) {
     if(event.key == "Enter") {
         let search = input.value.toLowerCase();
+        if (search.length == 0 || search == " ") {
+            document.getElementById("ini_msg").style.display = "block";
+            document.getElementById("part").style.display = "none";
+            document.getElementById("ini_msg").innerHTML = "Invalid search....."
+            setTimeout(() => {
+                window.location.href = "./playlist.html"
+            }, 1000);
+            return;
+        }
         value(search);
     }
 })
@@ -85,8 +104,9 @@ input.addEventListener("keydown", function(event) {
 //------------------------------------------------------------------
 
 function value(search) {
-    search = search.split(" ");
-    let key_word = music.filter(song => search.some(word => song.name.toLowerCase().split(" ").includes(word)));
+    search = search.trim();
+    let key_word = music.filter(song => song.name.toLowerCase().includes(search) || song.artist.toLowerCase().includes(search));
+    console.log(key_word);
     if (key_word.length > 0) {
         input.value = "";
         document.querySelector(".msg").innerHTML = `<button class="back-btn">
@@ -97,7 +117,8 @@ function value(search) {
         document.querySelector(".back-btn").addEventListener("click", function() {
             window.location.href = "./playlist.html";
         })
-        fav(key_word[0]);
+        
+        key_word.forEach(song => fav(song));
     }
     else {
         input.value = "";
@@ -106,6 +127,6 @@ function value(search) {
         document.getElementById("ini_msg").innerHTML = "No such song found....";
         setTimeout(() => {
             window.location.href = "./playlist.html";
-        }, 2000);
+        }, 1000);
     }
 }
