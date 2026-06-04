@@ -146,6 +146,7 @@ body {
   background-color: rgb(133, 154, 172);
   border-radius: 30px;
   border: none;
+  outline: none;
 }
 #searchbtn {
   height: 30px;
