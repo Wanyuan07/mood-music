@@ -1,11 +1,3 @@
-const playlists = {
-    "happy": "6wDEibCHYjsbLen2VrIPtt",
-    "sad": "189Sow1xr7R94oSKs4kISc",
-    "chill": "6hQSibEcPYWfiQ3pTxfXCK", 
-    "focus": "1eXFUaMJ9NGa3hzhi2H8TX",
-    "party": "1SX3oHTD0iRZM4c7TXZKL9",  
-    "sleepy": "0Uqdp1V2ytdrfIoAGQYslS"
-}
 const moodWords = {
     "happy": ["happy", "joyful", "cheerful", "delighted", "overjoyed", "pleased", "satisfied", "thrilled"],
     "sad": ["sad", "unhappy", "depressed", "down", "heartbroken", "mournful", "disheartened"],
@@ -44,25 +36,32 @@ button_Search.addEventListener("click", function() {
 
 function error(mood) {
     contain.style.display = "none";
-    if (!mood || mood == " ") {
+    if (!mood || mood.trim() == "") {
         msg.innerHTML = "Please enter a valid input.....";
         return;
     }
     mood = mood.toLowerCase().split(" ");
     let new_mood = Object.keys(moodWords).find(key => mood.some(word => moodWords[key].includes(word)));
     if (new_mood == undefined) {
-        msg.innerHTML = "Mood not available. Please try another one.....";
+        msg.innerHTML = `<div class="error">Sorry, I couldn't find that mood.<br>Try words like:  
+                         <div class="moods">  
+                             <span>Delighted</span>
+                             <span>Energetic</span>
+                             <span>Calm</span>
+                             <span>Tired</span>
+                             <span>Motivated</span>
+                             <span>Sad</span>
+                         </div></div>`;
         return;
-    }
-    else {
-        song(new_mood);
+    } else {
+        song(new_mood); 
     }
 }
 
 // ----------------------------------------------------
 
-pastMood = localStorage.getItem("lastMood");
-if (pastMood &&pastMood.length > 0) {
+let pastMood = localStorage.getItem("lastMood");
+if (pastMood && pastMood.length > 0) {
     song(pastMood);
 }
 
@@ -70,28 +69,44 @@ if (pastMood &&pastMood.length > 0) {
 
 function song(mood) {
     contain.style.display = "grid";
-    let playlistId = playlists[mood];
     localStorage.setItem("mood", `${mood}`);
     document.getElementById("des").innerHTML = "Welcome to the Mood Music Selector!"
-    msg.innerHTML = "Loading...........";
+    msg.innerHTML = `<div class="loading"><img id="load" src="./images/loading.png" alt="Loading...">Searching for your songs.....</div>`;
     contain.innerHTML = "";
-    let token = "BQDAujF5cU034gSX9FOjIPwuI99-NkguWR3J2KXKRXRg6ZXWZoJ4ORVaeGBnrcIRy2hbvVUb5Lc3tWErBBAVi7c3V0MAFhB-oDXHNkrAwb3Dg8ujWIlPNVWX6GduRQjReF9i6xW3dfY-_syvCKFS_NrfpR4FpzePdVuQNxYT1vOaL9hDZXn0nyTydH4RlqO1AVLcmOHLRADH3LWVie3qTOJTm0GtpA0svw--f1RPCEQTfnCkMkYcsRk-aiJZ6giM_S7QeRj_qBv6ouLk39fj-MOXFJz45OFJ1wiYsB8nhbfOW9zVk9DqpOU573tLR2_vlmJMn3Xmr8YEvsWYzy5tCTjhKWmncpmMfadReGi2FBBv9wWXHc3fwPtxf74x9pxlkMLxMIRl_Ub8SZy8l_pnw027AZLQm8go";
-    let promise = fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks?limit=50`, {
+    // ----------------------------------------------------
+    let token = "BQDCRAED9MaR_rpdhDgv8-RE-FShq_sWICotCv7_SjR62mQtnKpc-u1KM_jcYeHiGzsi4qBooclQZGemFuHpeX7Yrvc6IxJuJTiHlhO3v5zyj7R0pC1TgMlQ7vQk-7cO8kDRSr36tuUgxfBn2lmLYRSiLkzhpSobKZ4TO_3wrjCUBG4mPZjUtZl329ynWeiPtG5B2-C-OITBIT8Lq5moe0VNvT_jBb3JQ2c3RhGxd6febPjk3rWwwFM0R-1NXE0WaHFl0uilfcbzXV4xFuuoUZgr3DjKP3sMsusWSZ_1g1vsVKuZwzhwLpZZzO66z9APo32MmPMmHgn_yy2qA-gqO1gJ_mjxh7XzkpXx8qxGyJjvCz6PXD8wEOh8UYXEIBWrDvAmbMQxKVScrbb_c3V64lpbaj8BqnNe";
+    let promise_playlist = fetch(`https://api.spotify.com/v1/search?q=${mood}%20songs&type=playlist`, {
         headers: {
             Authorization: `Bearer ${token}`
         }
-    });
-    promise.then((response) => {
-        // console.log(response);
-        return response.json()
+    })
+    promise_playlist.then((response) => {
+        return response.json();
     }).then((data) => {
-        // console.log(data);
         if(data.error && data.error.status == 401) {
             msg.innerHTML = "Token expired....";
             return;
         }
-        if (localStorage.getItem)
-        card(mood, data);
+        let item_no = Math.round(Math.random() *9)
+        let playlistLink = "";
+        if (data.playlists.items[item_no] != null) {
+            playlistLink = data.playlists.items[item_no].href;
+        }
+        else {
+            playlistLink = data.playlists.items[0].href;
+        }
+        let promise_songs = fetch(`${playlistLink}/tracks?limit=50`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        promise_songs.then((response) => {
+            return response.json()
+        }).then((data) => {
+            card(mood, data);
+        })    
+    }).catch((error) => {
+        msg.innerHTML = "Network error. Please check your internet connection.....";
     })
 }
 
@@ -100,18 +115,17 @@ function song(mood) {
 let favorites = JSON.parse(localStorage.getItem("savedMusic")) || [];
 function card(mood, data) {
     msg.innerHTML = `Top recommendations for ${mood}:<br>`;
-    const num = localStorage.getItem("index") || Math.round(Math.random() * 40); 
+    const num = localStorage.getItem("index") || Math.round(Math.random() * (data.items.length - 12)); 
     let i = num, cardNum = 0;
-    while ( i < num + 10 || cardNum < 8) {
+    while ( i < num + 10 && cardNum < 8) {
         let song_card = document.createElement("div");
         song_card.className = "song-info";
         let track = data.items[i].track;
-        console.log(track);
-        let songname = track.name;
-        if (songname.length == 0) {
+        if (track == null) {
             i++;
             continue;
         }
+        let songname = track.name;
         let songlink = track.external_urls.spotify;
         let image = "";
         if (track.album.images.length > 0) {
@@ -133,10 +147,10 @@ function card(mood, data) {
         else {
             song_card.innerHTML += `<button class="fav"><img class="fav-img" src="./images/unfav.jpg"></button>`;
         }
-        localStorage.setItem("lastMood", "");
-        localStorage.setItem("index", "");
-        i++;
+        localStorage.removeItem("index");
+        localStorage.removeItem("lastMood");
         cardNum++;
+        i++;
         contain.appendChild(song_card);
         //------------------------------------------------
         song_card.querySelector(".fav").addEventListener("click", function() {
